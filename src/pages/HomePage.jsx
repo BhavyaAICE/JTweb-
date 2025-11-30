@@ -63,11 +63,14 @@ function HomePage({ navigateTo }) {
   ];
 
   const faqs = [
-    { question: "Are Glow's Products safe to use?", answer: 'Yes, all services undergo quality assurance checks for safe delivery.' },
-    { question: 'How do I install the cheats?', answer: "After purchase, you'll receive detailed installation instructions via email within minutes." },
-    { question: 'How often are the cheats updated?', answer: 'Our products are updated regularly to ensure compatibility and security.' },
-    { question: 'What payment methods do you accept?', answer: 'We accept all major payment methods including Credit/Debit cards, PayPal, and cryptocurrencies.' },
-    { question: 'How can I contact customer support?', answer: 'You can reach our 24/7 support team via Discord, email, or live chat on our website.' }
+    { question: 'What does Aurora offer?', answer: 'Aurora provides a range of digital gaming services, including: Valorant accounts, Fortnite accounts, Roblox accounts, and Account unban services.' },
+    { question: 'How do I receive my account after purchasing from Aurora?', answer: 'Once your purchase is complete, Aurora will send the login details through the website and sent directly to your email selected. Delivery is typically fast, depending on order volume.' },
+    { question: 'Are Aurora\'s accounts verified?', answer: 'Yes. All accounts listed on Aurora are checked and verified before being sold. However, customers are responsible for following each game\'s Terms of Service to avoid any future issues.' },
+    { question: 'Does Aurora offer refunds?', answer: 'No. Aurora does not offer refunds. All sales are final due to the nature of digital products and services.' },
+    { question: 'What if the account doesn\'t work when I receive it?', answer: 'If there is an issue immediately upon delivery, contact Aurora support right away. After verification, a replacement may be issued if eligible.' },
+    { question: 'How long do unban services take?', answer: 'Timeframes vary depending on the game and the ban type. Some unbans may be resolved quickly, while others can take several days.' },
+    { question: 'Can Aurora guarantee a successful unban?', answer: 'No. While Aurora uses proven methods, no unban service can guarantee 100% success. All service fees remain non-refundable.' },
+    { question: 'How can I contact Aurora support?', answer: 'You can reach Aurora through Discord: Username i.nc0g' }
   ];
 
   const [activeFAQ, setActiveFAQ] = useState(null);

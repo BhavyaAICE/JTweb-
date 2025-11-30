@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../contexts/CartContext';
 import { openSellAuthCheckout } from '../lib/sellauth';
+import Toast from './Toast';
 import './ProductVariantsModal.css';
 
 function ProductVariantsModal({ isOpen, onClose, product }) {
@@ -9,7 +10,13 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
   const [loading, setLoading] = useState(false);
   const [addingToCart, setAddingToCart] = useState(null);
   const [failedImages, setFailedImages] = useState({});
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const { addToCart, user } = useCart();
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3500);
+  };
 
   useEffect(() => {
     if (isOpen && product && product.has_variants) {
@@ -49,12 +56,12 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
 
   const handleAddToCart = async (variant) => {
     if (!user) {
-      alert('Please log in to add items to cart');
+      showToast('Please log in to add items to cart', 'error');
       return;
     }
 
     if (variant.stock === 0) {
-      alert('This product is currently out of stock.');
+      showToast('This product is currently out of stock.', 'error');
       return;
     }
 
@@ -63,9 +70,9 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
     setAddingToCart(null);
 
     if (success) {
-      alert(`${variant.name} added to cart!`);
+      showToast(`${variant.name} added to cart!`, 'success');
     } else {
-      alert('Error adding to cart');
+      showToast('Error adding to cart', 'error');
     }
   };
 
@@ -73,17 +80,17 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
     const shopId = import.meta.env.VITE_SELLAUTH_SHOP_ID;
 
     if (!shopId || shopId === '0') {
-      alert('SellAuth is not configured. Please add your SellAuth Shop ID to the .env file.');
+      showToast('SellAuth is not configured. Please contact support.', 'error');
       return;
     }
 
     if (!variant.sellauth_product_id) {
-      alert('This variant does not have a SellAuth product ID configured. Please contact support.');
+      showToast('This variant does not have a SellAuth product ID configured.', 'error');
       return;
     }
 
     if (variant.stock === 0) {
-      alert('This product is currently out of stock.');
+      showToast('This product is currently out of stock.', 'error');
       return;
     }
 
@@ -105,8 +112,15 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
   if (!isOpen || !product) return null;
 
   return (
-    <div className="variants-modal active" onClick={onClose}>
-      <div className="variants-modal-content" onClick={(e) => e.stopPropagation()}>
+    <>
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        show={toast.show}
+        onClose={() => setToast({ show: false, message: '', type: 'success' })}
+      />
+      <div className="variants-modal active" onClick={onClose}>
+        <div className="variants-modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="variants-header">
           <h2>{product.name}</h2>
           <button className="variants-close" onClick={onClose}>
@@ -175,6 +189,7 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

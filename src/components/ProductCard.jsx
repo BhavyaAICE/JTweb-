@@ -1,26 +1,33 @@
 import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { openSellAuthCheckout } from '../lib/sellauth';
+import Toast from './Toast';
 import './ProductCard.css';
 
 function ProductCard({ product, onClick, onAddToCart }) {
   const [adding, setAdding] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const { addToCart, user } = useCart();
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3500);
+  };
   const handleBuyNow = async (e) => {
     e.stopPropagation();
 
     const shopId = import.meta.env.VITE_SELLAUTH_SHOP_ID;
 
     if (!shopId || shopId === '0') {
-      alert('SellAuth is not configured. Please add your SellAuth Shop ID to the .env file.');
+      showToast('SellAuth is not configured. Please contact support.', 'error');
       return;
     }
 
     if (product.sellauth_product_id) {
       await openSellAuthCheckout(shopId, product.sellauth_product_id, null, 1);
     } else {
-      alert('This product does not have a SellAuth product ID configured.');
+      showToast('This product does not have a SellAuth product ID configured.', 'error');
     }
   };
 
@@ -28,12 +35,12 @@ function ProductCard({ product, onClick, onAddToCart }) {
     e.stopPropagation();
 
     if (!user) {
-      alert('Please log in to add items to cart');
+      showToast('Please log in to add items to cart', 'error');
       return;
     }
 
     if (!product.has_variants && product.stock === 0) {
-      alert('This product is currently out of stock.');
+      showToast('This product is currently out of stock.', 'error');
       return;
     }
 
@@ -42,9 +49,9 @@ function ProductCard({ product, onClick, onAddToCart }) {
     setAdding(false);
 
     if (success) {
-      alert(`${product.name} added to cart!`);
+      showToast(`${product.name} added to cart!`, 'success');
     } else {
-      alert('Error adding to cart');
+      showToast('Error adding to cart', 'error');
     }
   };
 
@@ -64,7 +71,14 @@ function ProductCard({ product, onClick, onAddToCart }) {
   };
 
   return (
-    <div className="product-card" onClick={handleClick}>
+    <>
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        show={toast.show}
+        onClose={() => setToast({ show: false, message: '', type: 'success' })}
+      />
+      <div className="product-card" onClick={handleClick}>
       <img
         key={imageFailed ? 'fallback' : 'primary'}
         src={getProductImage()}
@@ -108,6 +122,7 @@ function ProductCard({ product, onClick, onAddToCart }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

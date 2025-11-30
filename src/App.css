@@ -291,34 +291,62 @@ body {
   position: fixed;
   top: 100px;
   right: var(--space-32);
-  background: rgba(31, 107, 255, 0.95);
+  background: linear-gradient(135deg, rgba(31, 107, 255, 0.95) 0%, rgba(77, 163, 255, 0.95) 100%);
   color: #ffffff;
-  padding: 16px 24px;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(77, 163, 255, 0.6);
+  padding: 18px 28px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(31, 107, 255, 0.5), 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   z-index: 3000;
-  animation: slideIn 0.3s ease;
+  animation: slideInBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   display: none;
-  border: 1px solid rgba(77, 163, 255, 0.5);
+  border: 2px solid rgba(77, 163, 255, 0.6);
   font-weight: 600;
+  font-size: 15px;
+  backdrop-filter: blur(20px);
+  min-width: 280px;
 }
 
 .toast.show {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast.show::before {
+  content: '✓';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .toast.error {
-  background: rgba(239, 68, 68, 0.95);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
   color: var(--color-white);
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 12px 40px rgba(239, 68, 68, 0.5), 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-@keyframes slideIn {
-  from {
-    transform: translateX(400px);
+.toast.error::before {
+  content: '✕';
+}
+
+@keyframes slideInBounce {
+  0% {
+    transform: translateX(400px) scale(0.8);
     opacity: 0;
   }
-  to {
-    transform: translateX(0);
+  60% {
+    transform: translateX(-10px) scale(1.02);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) scale(1);
     opacity: 1;
   }
 }
