@@ -140,6 +140,7 @@ function HomePage({ navigateTo }) {
               key={product.id}
               product={product}
               onClick={() => handleProductClick(product)}
+              onAddToCart={() => handleProductClick(product)}
             />
           ))}
         </div>
