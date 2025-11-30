@@ -8,6 +8,7 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
   const [variants, setVariants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [addingToCart, setAddingToCart] = useState(null);
+  const [failedImages, setFailedImages] = useState({});
   const { addToCart, user } = useCart();
 
   useEffect(() => {
@@ -90,6 +91,17 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
     await openSellAuthCheckout(shopId, variant.sellauth_product_id, variantId, 1);
   };
 
+  const handleImageError = (variantId) => {
+    setFailedImages(prev => ({ ...prev, [variantId]: true }));
+  };
+
+  const getVariantImage = (variant) => {
+    if (failedImages[variant.id]) {
+      return 'https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=400&h=380&fit=crop';
+    }
+    return variant.image || product.image;
+  };
+
   if (!isOpen || !product) return null;
 
   return (
@@ -111,12 +123,11 @@ function ProductVariantsModal({ isOpen, onClose, product }) {
             variants.map((variant) => (
               <div key={variant.id} className="variant-item">
                 <img
-                  src={variant.image || product.image}
+                  key={`${variant.id}-${failedImages[variant.id] ? 'fallback' : 'primary'}`}
+                  src={getVariantImage(variant)}
                   alt={variant.name}
                   className="variant-image"
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=400&h=300&fit=crop';
-                  }}
+                  onError={() => handleImageError(variant.id)}
                 />
                 <div className="variant-info">
                   <h3 className="variant-name">{variant.name}</h3>

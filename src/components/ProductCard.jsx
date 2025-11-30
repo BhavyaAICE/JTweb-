@@ -5,6 +5,7 @@ import './ProductCard.css';
 
 function ProductCard({ product, onClick, onAddToCart }) {
   const [adding, setAdding] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
   const { addToCart, user } = useCart();
   const handleBuyNow = async (e) => {
     e.stopPropagation();
@@ -55,15 +56,21 @@ function ProductCard({ product, onClick, onAddToCart }) {
 
   const isOutOfStock = !product.has_variants && product.stock === 0;
 
+  const getProductImage = () => {
+    if (imageFailed) {
+      return 'https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=400&h=300&fit=crop';
+    }
+    return product.image;
+  };
+
   return (
     <div className="product-card" onClick={handleClick}>
       <img
-        src={product.image}
+        key={imageFailed ? 'fallback' : 'primary'}
+        src={getProductImage()}
         alt={product.name}
         className="product-image"
-        onError={(e) => {
-          e.target.src = 'https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=400&h=300&fit=crop';
-        }}
+        onError={() => setImageFailed(true)}
       />
       <div className="product-info">
         <span className="product-category">{product.category}</span>
