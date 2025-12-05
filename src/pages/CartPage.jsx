@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { initializeSellAuth, openSellAuthCheckout } from '../lib/sellauth';
+import Toast from '../components/Toast';
 import './CartPage.css';
 
 function CartPage() {
   const { cartItems, user, removeFromCart, updateQuantity, getTotalPrice, clearCart, loading } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 5000);
+  };
 
   const handleCheckout = async () => {
     if (!cartItems.length) {
@@ -68,6 +75,7 @@ function CartPage() {
       setTimeout(async () => {
         await clearCart();
         setIsCheckingOut(false);
+        showToast('Order placed successfully! Thank you for your purchase. Please consider leaving a review!', 'success');
       }, 1000);
     } catch (error) {
       console.error('Checkout error:', error);
@@ -98,11 +106,18 @@ function CartPage() {
   }
 
   return (
-    <div className="cart-container">
-      <div className="cart-header">
-        <h1>Shopping Cart</h1>
-        <span className="cart-item-count">{cartItems.length} item(s)</span>
-      </div>
+    <>
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        show={toast.show}
+        onClose={() => setToast({ show: false, message: '', type: 'success' })}
+      />
+      <div className="cart-container">
+        <div className="cart-header">
+          <h1>Shopping Cart</h1>
+          <span className="cart-item-count">{cartItems.length} item(s)</span>
+        </div>
 
       {cartItems.length === 0 ? (
         <div className="cart-empty">
@@ -193,7 +208,8 @@ function CartPage() {
           </div>
         </>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 

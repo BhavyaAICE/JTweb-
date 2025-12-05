@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import ProductVariantsModal from '../components/ProductVariantsModal';
+import ReviewModal from '../components/ReviewModal';
 import FastForwardIcon from '../assets/fast-forward-button-svgrepo-com.svg';
 import ShieldCheckIcon from '../assets/shield-check-svgrepo-com.svg';
 import CustomerServiceIcon from '../assets/customer-service-headset-svgrepo-com.svg';
@@ -11,9 +12,10 @@ function HomePage({ navigateTo }) {
   const [products, setProducts] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [settings, setSettings] = useState({});
-  const [stats, setStats] = useState({ products: 0, customers: 0, rating: 0 });
+  const [stats, setStats] = useState({ total_products: 0, total_customers: 0, avg_rating: 0, total_reviews: 0 });
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showVariantsModal, setShowVariantsModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -21,10 +23,11 @@ function HomePage({ navigateTo }) {
 
   const loadData = async () => {
     try {
-      const [productsRes, reviewsRes, settingsRes] = await Promise.all([
+      const [productsRes, reviewsRes, settingsRes, statsRes] = await Promise.all([
         supabase.from('products').select('*').eq('featured', true),
         supabase.from('reviews').select('*').order('created_at', { ascending: false }).limit(4),
-        supabase.from('site_settings').select('*')
+        supabase.from('site_settings').select('*'),
+        supabase.rpc('get_site_stats')
       ]);
 
       if (productsRes.data) setProducts(productsRes.data);
@@ -38,15 +41,9 @@ function HomePage({ navigateTo }) {
         setSettings(settingsObj);
       }
 
-      const { count: productCount } = await supabase
-        .from('products')
-        .select('*', { count: 'exact', head: true });
-
-      setStats({
-        products: productCount || 5,
-        customers: 300,
-        rating: 4.8
-      });
+      if (statsRes.data) {
+        setStats(statsRes.data);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -163,16 +160,20 @@ function HomePage({ navigateTo }) {
         <p className="section-subtitle">Here are some of our stats that show how well we succeed</p>
         <div className="stats-grid">
           <div className="stat-card">
-            <div className="stat-number">{stats.products}</div>
+            <div className="stat-number">{stats.total_products}</div>
             <div className="stat-label">Products</div>
           </div>
           <div className="stat-card">
-            <div className="stat-number">{stats.customers}</div>
+            <div className="stat-number">{stats.total_customers}</div>
             <div className="stat-label">Happy Customers</div>
           </div>
           <div className="stat-card">
-            <div className="stat-number">{stats.rating}</div>
+            <div className="stat-number">{stats.avg_rating}</div>
             <div className="stat-label">Average Rating</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-number">{stats.total_reviews}</div>
+            <div className="stat-label">Total Reviews</div>
           </div>
         </div>
       </section>
@@ -195,8 +196,18 @@ function HomePage({ navigateTo }) {
             <span className="star">★</span>
             <span className="star">★</span>
             <span className="star">★</span>
-            <span style={{ marginLeft: '8px', fontSize: '20px' }}>4.8 (900 vouches)</span>
+            <span style={{ marginLeft: '8px', fontSize: '20px' }}>{stats.avg_rating} ({stats.total_reviews} reviews)</span>
           </div>
+          <button
+            className="btn-primary"
+            onClick={() => setShowReviewModal(true)}
+            style={{ marginTop: '24px' }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Leave a Review
+          </button>
         </div>
         <div className="reviews-grid">
           {reviews.map(review => (
@@ -206,7 +217,15 @@ function HomePage({ navigateTo }) {
               </div>
               <p className="review-text">"{review.comment}"</p>
               <div className="review-meta">
-                <span>{review.author}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  {review.author}
+                  {review.verified_purchase && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" title="Verified Purchase">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                  )}
+                </span>
                 <span>{new Date(review.created_at).toLocaleDateString()}</span>
               </div>
             </div>
@@ -232,6 +251,12 @@ function HomePage({ navigateTo }) {
           ))}
         </div>
       </section>
+
+      <ReviewModal
+        isOpen={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        onReviewSubmitted={loadData}
+      />
     </div>
   );
 }
