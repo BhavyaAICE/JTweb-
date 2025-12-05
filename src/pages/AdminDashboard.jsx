@@ -97,6 +97,7 @@ function AdminDashboard({ navigateTo }) {
       featured: formData.get('featured') === 'on',
       has_variants: formData.get('has_variants') === 'on',
       sellauth_product_id: formData.get('sellauth_product_id') || null,
+      sellauth_variant_id: formData.get('sellauth_variant_id') || null,
       updated_at: new Date().toISOString()
     };
 
@@ -839,6 +840,19 @@ function AdminDashboard({ navigateTo }) {
                 />
                 <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
                   Numeric Product ID from your SellAuth Dashboard at https://dash.sellauth.com under Products
+                </p>
+              </div>
+              <div className="form-group">
+                <label className="form-label">SellAuth Variant ID (Optional)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  name="sellauth_variant_id"
+                  defaultValue={editingProduct?.sellauth_variant_id}
+                  placeholder="e.g., 67890"
+                />
+                <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
+                  Numeric Variant ID from your SellAuth Dashboard. Use this for products without variants to specify a specific variant option.
                 </p>
               </div>
               <button type="submit" className="btn-primary full-width">

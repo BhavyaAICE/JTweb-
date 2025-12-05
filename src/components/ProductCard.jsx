@@ -25,7 +25,8 @@ function ProductCard({ product, onClick, onAddToCart }) {
     }
 
     if (product.sellauth_product_id) {
-      await openSellAuthCheckout(shopId, product.sellauth_product_id, null, 1);
+      const variantId = product.sellauth_variant_id || null;
+      await openSellAuthCheckout(shopId, product.sellauth_product_id, variantId, 1);
     } else {
       showToast('This product does not have a SellAuth product ID configured.', 'error');
     }
