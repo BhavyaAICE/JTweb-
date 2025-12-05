@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import CartIcon from '../assets/cart-large-2-svgrepo-com.svg';
+import LogoImage from '../assets/image.png';
 import './Navbar.css';
 
 function Navbar({ navigateTo, currentPage }) {
@@ -19,24 +20,6 @@ function Navbar({ navigateTo, currentPage }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId) => {
-    if (currentPage !== 'home') {
-      navigateTo('home');
-      setTimeout(() => {
-        const section = document.getElementById(sectionId);
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-    setMobileMenuOpen(false);
-  };
-
   const handleSignOut = async () => {
     await signOut();
     navigateTo('home');
@@ -47,7 +30,8 @@ function Navbar({ navigateTo, currentPage }) {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
         <div className="logo" onClick={() => navigateTo('home')}>
-          AuroraServices
+          <img src={LogoImage} alt="Aurora Logo" className="logo-image" />
+          <span className="logo-text">urora</span>
         </div>
 
         <ul className={`nav-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
@@ -62,13 +46,9 @@ function Navbar({ navigateTo, currentPage }) {
             </a>
           </li>
           <li>
-            <a onClick={() => scrollToSection('about')}>About</a>
-          </li>
-          <li>
-            <a onClick={() => scrollToSection('reviews')}>Reviews</a>
-          </li>
-          <li>
-            <a onClick={() => scrollToSection('faq')}>FAQ</a>
+            <a onClick={() => { navigateTo('reviews'); setMobileMenuOpen(false); }}>
+              Reviews
+            </a>
           </li>
           <li>
             <button className="nav-btn cart-btn" onClick={() => { navigateTo('cart'); setMobileMenuOpen(false); }}>
@@ -86,7 +66,7 @@ function Navbar({ navigateTo, currentPage }) {
                 </li>
               )}
               <li>
-                <button className="nav-btn" onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid rgba(139, 92, 246, 0.5)' }}>
+                <button className="nav-btn" onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid rgba(77, 163, 255, 0.5)' }}>
                   Sign Out
                 </button>
               </li>

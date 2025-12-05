@@ -23,6 +23,25 @@
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.logo-image {
+  height: 40px;
+  width: auto;
+  filter: drop-shadow(0 0 20px rgba(77, 163, 255, 0.5));
+  transition: all 0.3s ease;
+}
+
+.logo:hover .logo-image {
+  filter: drop-shadow(0 0 30px rgba(77, 163, 255, 0.8));
+  transform: scale(1.05);
+}
+
+.logo-text {
   font-size: 26px;
   font-weight: 800;
   background: linear-gradient(135deg, #4da3ff 0%, #00d4ff 100%);
@@ -30,7 +49,6 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: drop-shadow(0 0 25px rgba(77, 163, 255, 0.6));
-  cursor: pointer;
   letter-spacing: -0.02em;
 }
 

@@ -5,6 +5,7 @@ import { initializeSellAuth } from './lib/sellauth';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
+import ReviewsPage from './pages/ReviewsPage';
 import CartPage from './pages/CartPage';
 import LoginModal from './components/LoginModal';
 import AdminDashboard from './pages/AdminDashboard';
@@ -51,6 +52,8 @@ function App() {
         return <HomePage navigateTo={navigateTo} />;
       case 'products':
         return <ProductsPage />;
+      case 'reviews':
+        return <ReviewsPage />;
       case 'cart':
         return <CartPage />;
       case 'admin':

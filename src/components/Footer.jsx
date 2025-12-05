@@ -25,21 +25,11 @@ function Footer({ navigateTo }) {
     }
   };
 
-  const scrollToSection = (sectionId) => {
-    navigateTo('home');
-    setTimeout(() => {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  };
-
   return (
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>AuroraServices</h3>
+          <h3>Aurora</h3>
           <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginTop: '8px' }}>
             Premium digital services
           </p>
@@ -57,15 +47,13 @@ function Footer({ navigateTo }) {
           <ul className="footer-links">
             <li><a onClick={() => navigateTo('home')}>Home</a></li>
             <li><a onClick={() => navigateTo('products')}>Products</a></li>
-            <li><a onClick={() => scrollToSection('about')}>About</a></li>
-            <li><a onClick={() => scrollToSection('reviews')}>Reviews</a></li>
+            <li><a onClick={() => navigateTo('reviews')}>Reviews</a></li>
           </ul>
         </div>
 
         <div className="footer-section">
           <h3>Support</h3>
           <ul className="footer-links">
-            <li><a onClick={() => scrollToSection('faq')}>FAQ</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">Terms of Service</a></li>
             <li><a href="#">Privacy Policy</a></li>
@@ -74,7 +62,7 @@ function Footer({ navigateTo }) {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; 2025 AuroraServices. All rights reserved.</p>
+        <p>&copy; 2025 Aurora. All rights reserved.</p>
       </div>
     </footer>
   );
