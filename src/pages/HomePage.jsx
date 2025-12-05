@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import ProductVariantsModal from '../components/ProductVariantsModal';
+import FastForwardIcon from '../assets/fast-forward-button-svgrepo-com.svg';
+import ShieldCheckIcon from '../assets/shield-check-svgrepo-com.svg';
+import CustomerServiceIcon from '../assets/customer-service-headset-svgrepo-com.svg';
 import './HomePage.css';
 
 function HomePage({ navigateTo }) {
@@ -57,9 +60,9 @@ function HomePage({ navigateTo }) {
   };
 
   const features = [
-    { icon: '⚡', title: 'Instant Digital Delivery', description: 'Get your products instantly through a secure automated system.' },
-    { icon: '🛡️', title: 'Verified & Trusted Services', description: 'Every product passes strict quality checks for safety & performance.' },
-    { icon: '🎧', title: '24/7 Customer Support', description: 'Our team ensures smooth service and fast responses for every user.' }
+    { icon: <img src={FastForwardIcon} alt="Fast Forward" style={{ width: '56px', height: '56px' }} />, title: 'Instant Digital Delivery', description: 'Get your products instantly through a secure automated system.' },
+    { icon: <img src={ShieldCheckIcon} alt="Shield Check" style={{ width: '56px', height: '56px' }} />, title: 'Verified & Trusted Services', description: 'Every product passes strict quality checks for safety & performance.' },
+    { icon: <img src={CustomerServiceIcon} alt="Customer Service" style={{ width: '56px', height: '56px' }} />, title: '24/7 Customer Support', description: 'Our team ensures smooth service and fast responses for every user.' }
   ];
 
   const faqs = [
