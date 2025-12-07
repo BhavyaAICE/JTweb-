@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import CartIcon from '../assets/cart-large-2-svgrepo-com.svg';
-import LogoImage from '../assets/image.png';
+import LogoImage from '../assets/image copy.png';
 import './Navbar.css';
 
 function Navbar({ navigateTo, currentPage }) {
@@ -50,35 +50,30 @@ function Navbar({ navigateTo, currentPage }) {
               Reviews
             </a>
           </li>
-          <li>
-            <button className="nav-btn cart-btn" onClick={() => { navigateTo('cart'); setMobileMenuOpen(false); }}>
-              <img src={CartIcon} alt="Cart" className="cart-icon" />
-              {getTotalItems() > 0 && <span className="cart-badge">{getTotalItems()}</span>}
-            </button>
-          </li>
+        </ul>
+
+        <div className={`nav-actions ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+          <button className="nav-btn cart-btn" onClick={() => { navigateTo('cart'); setMobileMenuOpen(false); }}>
+            <img src={CartIcon} alt="Cart" className="cart-icon" />
+            {getTotalItems() > 0 && <span className="cart-badge">{getTotalItems()}</span>}
+          </button>
           {user ? (
             <>
               {isAdmin && (
-                <li>
-                  <button className="nav-btn" onClick={() => { navigateTo('admin'); setMobileMenuOpen(false); }}>
-                    Admin Panel
-                  </button>
-                </li>
-              )}
-              <li>
-                <button className="nav-btn" onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid rgba(77, 163, 255, 0.5)' }}>
-                  Sign Out
+                <button className="nav-btn" onClick={() => { navigateTo('admin'); setMobileMenuOpen(false); }}>
+                  Admin Panel
                 </button>
-              </li>
+              )}
+              <button className="nav-btn nav-btn-outline" onClick={handleSignOut}>
+                Sign Out
+              </button>
             </>
           ) : (
-            <li>
-              <button className="nav-btn" onClick={() => { navigateTo('login'); setMobileMenuOpen(false); }}>
-                Login
-              </button>
-            </li>
+            <button className="nav-btn" onClick={() => { navigateTo('login'); setMobileMenuOpen(false); }}>
+              Login
+            </button>
           )}
-        </ul>
+        </div>
 
         <button
           className="mobile-menu-btn"
