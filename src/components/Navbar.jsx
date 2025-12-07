@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import CartIcon from '../assets/cart-large-2-svgrepo-com.svg';
-import LogoImage from '../assets/image copy.png';
+import LogoImage from '../assets/image.png';
 import './Navbar.css';
 
 function Navbar({ navigateTo, currentPage }) {
